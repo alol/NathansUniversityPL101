@@ -19,7 +19,7 @@ var noteForMusStatement = function(expr, time, note) {
     switch(expr.tag) {
         case 'note':
             note.push({ tag: 'note',
-                    pitch: expr.pitch,
+                    pitch: convertPitch(expr.pitch),
                     start: time,
                     dur: expr.dur
             });
@@ -46,6 +46,40 @@ var noteForMusStatement = function(expr, time, note) {
     }
     return note;
 };
+
+var convertPitch = function(pitch) {
+    var note = pitch.charAt(0).toLowerCase();
+    var octave = parseInt(pitch.substr(1));
+
+    var notePitch = 0;
+    switch (note) {
+        case 'c':
+            notePitch = 0;
+            break;
+        case 'd':
+            notePitch = 2;
+            break;
+        case 'e':
+            notePitch = 4;
+            break;
+        case 'f':
+            notePitch = 5;
+            break;
+        case 'g':
+            notePitch = 7;
+            break;
+        case 'a':
+            notePitch = 9;
+            break;
+        case 'b':
+            notePitch = 11;
+            break;
+    }
+
+    //console.log(pitch + ": " + note + "; " + octave + " - " + notePitch);
+
+    return 12 + (12 * octave) + notePitch;
+}
 
 var compile = function (musexpr) {
     return noteForMusStatement(musexpr, 0, []);
