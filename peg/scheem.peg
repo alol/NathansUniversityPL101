@@ -1,15 +1,23 @@
 start =
-    atom
+    whitespace atom:atom whitespace
+        { return atom; }
  /  expression
-
+                                   
 expression =
     [(] atoms:atom+ [)]
         { return atoms; }
-    
+                                   
 validchar
     = [0-9a-zA-Z_?!+\-=@#$%^&*/.]
-
+                                   
+quote =
+    "'" atom:atom
+        {return ["quote", + atom]}
+                                   
 atom =
-    chars:validchar+ [ \t\n]*
+    whitespace chars:validchar+ whitespace
         { return chars.join(""); }
  /  expression
+
+whitespace =
+    [ \t\n]*
