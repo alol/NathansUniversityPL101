@@ -10,6 +10,6 @@ validchar
     = [0-9a-zA-Z_?!+\-=@#$%^&*/.]
 
 atom =
-    chars:validchar+ space:[ ]?
+    chars:validchar+ " "*
         { return chars.join(""); }
  /  expression

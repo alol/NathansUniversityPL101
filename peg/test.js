@@ -8,7 +8,12 @@ var data = fs.readFileSync('scheem.peg', 'utf-8');
 console.log(data);
 // Create my parser
 var parse = PEG.buildParser(data).parse;
-// Do a test
+// basic test
 assert.deepEqual( parse("(a b c)"), ["a", "b", "c"] );
+// nested expression
 assert.deepEqual( parse("(a b c (d e f))"), ["a", "b", "c", ["d", "e", "f"]] );
+// atom with no parens
 assert.deepEqual( parse("+"), "+" );
+
+// arbitrary whitespace
+assert.deepEqual( parse("(a        b c)"), ["a", "b", "c"] );
