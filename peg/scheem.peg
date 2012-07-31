@@ -1,0 +1,15 @@
+start =
+    atom
+ /  expression
+
+expression =
+    [(] atoms:atom+ [)]
+        { return atoms; }
+    
+validchar
+    = [0-9a-zA-Z_?!+\-=@#$%^&*/.]
+
+atom =
+    chars:validchar+ space:[ ]?
+        { return chars.join(""); }
+ /  expression
