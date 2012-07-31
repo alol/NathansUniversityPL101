@@ -1,24 +1,33 @@
 start =
-    whitespace atom:atom whitespace
-        { return atom; }
- /  expression
-                                   
+    pass values:value?
+       { return values; }
+ 
 expression =
-    [(] atoms:atom+ [)]
-        { return atoms; }
-                                   
+    "(" pass values:value+ ")" pass
+        { return values; }
+
 validchar
     = [0-9a-zA-Z_?!+\-=@#$%^&*/.]
-                                   
+
 quote =
-    "'" atom:atom
-        {return ["quote", atom]}
-                                   
+    "'" values:value
+        {return ["quote", values]}
+
 atom =
-    whitespace chars:validchar+ whitespace
+    chars:validchar+ pass
         { return chars.join(""); }
- /  expression
- /  quote
 
 whitespace =
-    [ \t\n]*
+    [ \t]
+
+newline =
+    [\r\n]
+
+pass =
+   (whitespace / newline / comment)*
+
+comment = 
+    ";;" (!newline .)*
+
+value =
+    atom / expression / quote
