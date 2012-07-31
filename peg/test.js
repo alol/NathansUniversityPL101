@@ -17,3 +17,7 @@ assert.deepEqual( parse("+"), "+" );
 
 // arbitrary whitespace
 assert.deepEqual( parse("(a        b c)"), ["a", "b", "c"] );
+// tabs
+assert.deepEqual( parse("(a	b		c)"), ["a", "b", "c"] );
+// newlines
+assert.deepEqual( parse("(a\nb\n\nc)"), ["a", "b", "c"] );
