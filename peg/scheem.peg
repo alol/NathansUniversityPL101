@@ -12,12 +12,13 @@ validchar
                                    
 quote =
     "'" atom:atom
-        {return ["quote", + atom]}
+        {return ["quote", atom]}
                                    
 atom =
     whitespace chars:validchar+ whitespace
         { return chars.join(""); }
  /  expression
+ /  quote
 
 whitespace =
     [ \t\n]*

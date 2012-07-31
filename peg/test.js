@@ -21,3 +21,6 @@ assert.deepEqual( parse("(a        b c)"), ["a", "b", "c"] );
 assert.deepEqual( parse("(a	b		c)"), ["a", "b", "c"] );
 // newlines
 assert.deepEqual( parse("(a\nb\n\nc)"), ["a", "b", "c"] );
+
+//quote shortcut syntax '(1 2 3) => (quote (1 2 3))
+assert.deepEqual( parse("'(1 2 3)"), parse( "(quote(1 2 3))" ));
