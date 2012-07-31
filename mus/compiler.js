@@ -12,6 +12,9 @@ var endTime = function (time, expr) {
             return endTime(time, expr.left) + 
                 endTime(time, expr.right);
             break;
+        case 'repeat':
+            return endTime(time, expr.section);
+            break;
     }
 };
 
@@ -42,6 +45,13 @@ var noteForMusStatement = function(expr, time, note) {
             note = noteForMusStatement(expr.right, 
                                 endTime(time, expr.left), 
                                 note);
+            break;
+        case 'repeat':
+            var t = endTime(0, expr.section);
+            for (var i = 0; i < expr.count; i++) {
+                note = noteForMusStatement(expr.section, time + t, note);
+                t += t;
+            }
             break;
     }
     return note;
@@ -94,7 +104,15 @@ var melody_mus =
       right:
        { tag: 'seq',
          left: { tag: 'note', pitch: 'c4', dur: 500 },
-         right: { tag: 'rest', dur: 500 } } };
+         right: { tag: 'seq', 
+             left: { tag: 'rest', dur: 250},
+             right: { tag: 'repeat', count: 3,
+                 section: { tag: 'par',
+                     left: { tag: 'note', pitch: 'a3', dur: 500 },
+                     right: { tag: 'note', pitch: 'c4', dur: 500 }
+                 }
+             }
+         } } };
 
 console.log(melody_mus);
 console.log(compile(melody_mus));
