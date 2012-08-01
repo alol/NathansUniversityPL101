@@ -23,3 +23,5 @@ assert.deepEqual( parse("g3 for 500ms and\nc3 for 250ms"),
             left:{tag:"note", pitch:"g3", dur:500},
             right:{tag:"note", pitch:"c3", dur:250}
         } );
+//rest
+assert.deepEqual( parse("rest for 500ms"), {tag:"rest", dur:500} );

@@ -2,7 +2,7 @@ start =
     expression
 
 expression =
-    par / seq / note
+    par / seq / note / rest
 
 pitch = 
     pitch:[A-Ga-g] accidental:[#b]?
@@ -47,3 +47,7 @@ seq =
 par =
     left:parnote right:(expression)
         { return { tag:'par', left:left, right:right } }
+
+rest =
+    "rest" for time:(time / time_in_s) newline
+        { return { tag:'rest', dur:time } }
