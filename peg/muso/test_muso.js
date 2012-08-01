@@ -16,3 +16,10 @@ assert.deepEqual( parse("g3 for 500ms\nc3 for 250ms"),
             left:{tag:"note", pitch:"g3", dur:500},
             right:{tag:"note", pitch:"c3", dur:250}
         } );
+
+//basic par
+assert.deepEqual( parse("g3 for 500ms and\nc3 for 250ms"), 
+        {tag:"par", 
+            left:{tag:"note", pitch:"g3", dur:500},
+            right:{tag:"note", pitch:"c3", dur:250}
+        } );

@@ -2,7 +2,7 @@ start =
     expression
 
 expression =
-    seq / note
+    par / seq / note
 
 pitch = 
     pitch:[A-Ga-g] accidental:[#b]?
@@ -24,9 +24,15 @@ note =
     pitch:pitch octave:octave for time:(time / time_in_s) newline
         { return { tag:'note', pitch: pitch + octave, dur:time }; }
 
+parnote =
+    pitch:pitch octave:octave for time:(time / time_in_s) and newline
+        { return { tag:'note', pitch: pitch + octave, dur:time }; }
 
 for =
-    "for" whitespace
+    whitespace "for" whitespace
+
+and =
+    whitespace "and" whitespace
 
 whitespace = 
     [ \t]*
@@ -35,5 +41,9 @@ newline =
     [\r\n]*
 
 seq = 
-    left:note right:(seq / note)
+    left:note right:(expression)
         { return { tag:'seq', left:left, right:right } }
+
+par =
+    left:parnote right:(expression)
+        { return { tag:'par', left:left, right:right } }
