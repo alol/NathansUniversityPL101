@@ -1,0 +1,39 @@
+start =
+    expression
+
+expression =
+    seq / note
+
+pitch = 
+    pitch:[A-Ga-g] accidental:[#b]?
+        { return pitch + accidental }
+
+octave =
+    octave:[0-9]+ whitespace
+        { return octave; }
+
+time =
+    time:[0-9]+ "ms"
+        { return time.join(""); }
+
+time_in_s =
+    time:[0-9\.]+ "s"
+        { return parseFloat(time.join(""))*1000; }
+
+note = 
+    pitch:pitch octave:octave for time:(time / time_in_s) newline
+        { return { tag:'note', pitch: pitch + octave, dur:time }; }
+
+
+for =
+    "for" whitespace
+
+whitespace = 
+    [ \t]*
+
+newline =
+    [\r\n]*
+
+seq = 
+    left:note right:(seq / note)
+        { return { tag:'seq', left:left, right:right } }
