@@ -22,6 +22,10 @@ var evalScheem = function (expr, env) {
     if (typeof expr === 'number') {
         return expr;
     }
+    // Strings are variable references
+    if (typeof expr === 'string') {
+        return env[expr];
+    }
     // Look at head of list for operation
     switch (expr[0]) {
         case '+':
@@ -149,6 +153,14 @@ suite('divide', function() {
         assert.deepEqual(
             evalScheem(['/', 1, 2], {}),
             0.5
+        );
+    });
+});
+suite('variables', function() {
+    test('where x is 1, x + x = 2', function() {
+        assert.deepEqual(
+            evalScheem(['+', 'x', 'x'], {x: 1}),
+            2
         );
     });
 });
