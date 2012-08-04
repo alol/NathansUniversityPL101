@@ -45,7 +45,14 @@ var evalScheem = function (expr, env) {
             return 0;
         case 'set!':
             env[expr[1]] = evalScheem(expr[2], env);
-            return 0;   }
+            return 0;   
+        case 'begin':
+            var retVal;
+            for(var i = 0; i < expr.length; i++) {
+                retVal = evalScheem(expr[i], env);
+            }
+            return retVal;
+        }
 };
 
 // Some unit tests
@@ -192,6 +199,16 @@ suite('variables', function() {
             env,
             {x:100}
         );
+    });
+});
+suite('begin', function() {
+    test('return the last expression', function() {
+        evalScheem(['begin', 1, 2, 3], {}),
+        3
+    });
+    test('define and then retrieve a variable', function() {
+        evalScheem(['begin', ['define', 'x', 5], 'x'], {}),
+        5
     });
 });
 
