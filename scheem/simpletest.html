@@ -39,7 +39,13 @@ var evalScheem = function (expr, env) {
             return evalScheem(expr[1]) / evalScheem(expr[2]);
         case 'quote':
             return expr[1];
-    }
+        case 'define':
+            if(!env[expr[1]])
+                    env[expr[1]] = evalScheem(expr[2], env);
+            return 0;
+        case 'set!':
+            env[expr[1]] = evalScheem(expr[2], env);
+            return 0;   }
 };
 
 // Some unit tests
@@ -161,6 +167,30 @@ suite('variables', function() {
         assert.deepEqual(
             evalScheem(['+', 'x', 'x'], {x: 1}),
             2
+        );
+    });
+    test('define x to a number', function() {
+        var env = {};
+        evalScheem(['define', 'x', 1], env);
+        assert.deepEqual(
+            env,
+            {x:1}
+        );
+    });
+    test('define x to the result of an expression', function() {
+        var env = {};
+        evalScheem(['define', 'x', ['*', 20, 5]], env);
+        assert.deepEqual(
+            env,
+            {x:100}
+        );
+    });
+    test('overwrite x to another number', function() {
+        var env = {x:1};
+        evalScheem(['set!', 'x', 100], env);
+        assert.deepEqual(
+            env,
+            {x:100}
         );
     });
 });
