@@ -52,6 +52,8 @@ var evalScheem = function (expr, env) {
                 retVal = evalScheem(expr[i], env);
             }
             return retVal;
+        case 'quote':
+            return expr[1];
         }
 };
 
@@ -209,6 +211,16 @@ suite('begin', function() {
     test('define and then retrieve a variable', function() {
         evalScheem(['begin', ['define', 'x', 5], 'x'], {}),
         5
+    });
+});
+suite('quote', function() {
+    test('should return the literal expression', function() {
+        evalScheem(['quote', [1, 2, 3]], {}),
+        [1, 2, 3]
+    });
+    test('quoted expression should not be evaluated', function() {
+        evalScheem(['quote', ['foo', 'x', 5]], {}),
+        ['foo', 'x', 5]
     });
 });
 
