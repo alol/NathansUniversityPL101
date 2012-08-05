@@ -29,14 +29,37 @@ var evalScheem = function (expr, env) {
     // Look at head of list for operation
     switch (expr[0]) {
         case '+':
-            return evalScheem(expr[1], env) +
-                   evalScheem(expr[2], env);
+            var expr1 = evalScheem(expr[1], env);
+            var expr2 = evalScheem(expr[2], env);
+            if (typeof expr1 !== "number")
+                throw new Error("Parameter 1 is not a number")
+            else if (typeof expr2 !== "number")
+                throw new Error("Parameter 2 is not a number")
+            return expr1 + expr2;
         case '-':
-            return evalScheem(expr[1]) - evalScheem(expr[2]);
+            var expr1 = evalScheem(expr[1], env);
+            var expr2 = evalScheem(expr[2], env);
+            if (typeof expr1 !== "number")
+                throw new Error("Parameter 1 is not a number")
+            else if (typeof expr2 !== "number")
+                throw new Error("Parameter 2 is not a number")
+            return expr1 - expr2;
         case '*':
-            return evalScheem(expr[1]) * evalScheem(expr[2]);
+            var expr1 = evalScheem(expr[1], env);
+            var expr2 = evalScheem(expr[2], env);
+            if (typeof expr1 !== "number")
+                throw new Error("Parameter 1 is not a number")
+            else if (typeof expr2 !== "number")
+                throw new Error("Parameter 2 is not a number")
+            return expr1 * expr2;
         case '/':
-            return evalScheem(expr[1]) / evalScheem(expr[2]);
+            var expr1 = evalScheem(expr[1], env);
+            var expr2 = evalScheem(expr[2], env);
+            if (typeof expr1 !== "number")
+                throw new Error("Parameter 1 is not a number")
+            else if (typeof expr2 !== "number")
+                throw new Error("Parameter 2 is not a number")
+            return expr1 / expr2;
         case 'quote':
             return expr[1];
         case 'define':
@@ -76,6 +99,9 @@ var evalScheem = function (expr, env) {
             if(evalScheem(expr[1]) === '#t')
                 return evalScheem(expr[2]);
             return evalScheem(expr[3]);
+        default:
+            throw new Error("undefined operation!");
+
     }
 };
 
@@ -121,10 +147,9 @@ suite('add', function() {
         );
     });
     test('a dog and a cat', function() {
-        assert.deepEqual(
-            evalScheem(['+', 'dog', 'cat'], {}),
-            42
-        );
+        assert.throws(function() {
+            evalScheem(['+', 'dog', 'cat'], {});
+        });
     });
 });
 suite('subtract', function() {
@@ -146,6 +171,11 @@ suite('subtract', function() {
             0
         );
     });
+    test('a dog minus a cat', function() {
+        assert.throws(function() {
+            evalScheem(['-', 'dog', 'cat'], {});
+        });
+    });
 });
 suite('multiply', function() {
     test('two numbers', function() {
@@ -165,6 +195,11 @@ suite('multiply', function() {
             evalScheem(['*', 2, 2], {}),
             4
         );
+    });
+    test('a dog times a cat', function() {
+        assert.throws(function() {
+            evalScheem(['*', 'dog', 'cat'], {});
+        });
     });
 });
 suite('divide', function() {
@@ -191,6 +226,11 @@ suite('divide', function() {
             evalScheem(['/', 1, 2], {}),
             0.5
         );
+    });
+    test('a dog divided by a cat', function() {
+        assert.throws(function() {
+            evalScheem(['/', 'dog', 'cat'], {});
+        });
     });
 });
 suite('variables', function() {
