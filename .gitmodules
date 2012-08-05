@@ -1,0 +1,3 @@
+[submodule "scheem/codemirror"]
+	path = scheem/codemirror
+	url = https://github.com/marijnh/CodeMirror2.git
