@@ -12,6 +12,7 @@
   </script>
   <script src="http://nathansuniversity.com/js/mocha.js">
   </script>
+  <script src="parser.js"></script> 
   <script>mocha.setup('tdd')</script>
   <script>
 var assert = chai.assert;
@@ -372,6 +373,44 @@ suite('if', function() {
         assert.deepEqual(
             evalScheem(['if', ['=', 2, 2], 1, 'error']),
             1
+        );
+    });
+});
+suite('parse', function() {
+    test('a number', function() {
+        assert.deepEqual(
+            SCHEEM.parse('42'),
+            42
+        );
+    });
+    test('a variable', function() {
+        assert.deepEqual(
+            SCHEEM.parse('x'),
+            'x'
+        );
+    });
+    test('an expression', function() {
+        assert.deepEqual(
+            SCHEEM.parse('(+ 1 1)'),
+            ['+', 1, 1]
+        );
+    });
+    test('a nested expression', function() {
+        assert.deepEqual(
+            SCHEEM.parse('(* 50 (+ 1 1))'),
+            ['*', 50, ['+', 1, 1]]
+        );
+    });
+    test('a quote', function() {
+        assert.deepEqual(
+            SCHEEM.parse('(quote (1 2 3))'),
+            ['quote', [1, 2, 3]]
+        );
+    });
+    test('a shorthand quote', function() {
+        assert.deepEqual(
+            SCHEEM.parse("'(1 2 3)"),
+            ['quote', [1, 2, 3]]
         );
     });
 });
