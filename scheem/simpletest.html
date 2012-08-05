@@ -64,6 +64,8 @@ var evalScheem = function (expr, env) {
             return e2;
         case 'car':
             return evalScheem(expr[1]).shift();
+        case 'cdr':
+            return evalScheem(expr[1]).slice(1);
     }
 };
 
@@ -272,6 +274,20 @@ suite('car', function() {
         assert.deepEqual(
             evalScheem(['car', ['quote',[[1, 'a'], 2, 3]]]),
             [1, 'a']
+        );
+    });
+});
+suite('cdr', function() {
+    test('head removed of a list (atom)', function() {
+        assert.deepEqual(
+            evalScheem(['cdr', ['quote',[1, 2, 3]]]),
+            [2, 3]
+        );
+    });
+    test('head removed of a list (list)', function() {
+        assert.deepEqual(
+            evalScheem(['cdr', ['quote',[[1, 'a'], ['b', 2, 3]]]]),
+            [['b', 2, 3]]
         );
     });
 });
