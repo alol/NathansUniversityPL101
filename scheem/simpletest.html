@@ -52,6 +52,12 @@ var evalScheem = function (expr, env) {
                 retVal = evalScheem(expr[i], env);
             }
             return retVal;
+        case '<':
+            var eq =
+                (evalScheem(expr[1], env) <
+                 evalScheem(expr[2], env));
+            if (eq) return '#t';
+            return '#f';
         }
 };
 
@@ -211,6 +217,18 @@ suite('begin', function() {
         5
     });
 });
+suite('less than', function() {
+    test('1 < 2 should return "#t"', function() {
+        evalScheem(['<', 1, 2], {}),
+        "#t"
+    });
+    test('2 < 2 should return "#f"', function() {
+        evalScheem(['<', 2, 2], {}),
+        "#f"
+    });
+    test('3 < 2 should return "#f"', function() {
+        evalScheem(['<', 3, 2], {}),
+        "#f"
     });
 });
 
