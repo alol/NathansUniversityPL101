@@ -247,12 +247,16 @@ suite('less than', function() {
 });
 suite('cons', function() {
     test('add an atom to a list', function() {
-        evalScheem(['cons', 1, ['quote', [2, 3]]]),
-        [1, 2, 3]
+        assert.deepEqual(
+            evalScheem(['cons', 1, ['quote', [2, 3]]]),
+            [1, 2, 3]
+        );
     });
     test('add a list to a list', function() {
-        evalScheem(['cons', ['quote', [1, 2]], ['quote', [2, 3]]]),
-        [1, 2, 2, 3]
+        assert.deepEqual(
+            evalScheem(['cons', ['quote', [1, 2]], ['quote', [2, 3]]]),
+            [[1, 2], 2, 3]
+        );
     });
 });
 
