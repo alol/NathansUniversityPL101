@@ -72,6 +72,10 @@ var evalScheem = function (expr, env) {
                  evalScheem(expr[2], env));
             if (eq) return '#t';
             return '#f';
+        case 'if':
+            if(evalScheem(expr[1]) === '#t')
+                return evalScheem(expr[2]);
+            return evalScheem(expr[3]);
     }
 };
 
@@ -308,6 +312,26 @@ suite('equals', function() {
         assert.deepEqual(
             evalScheem(['=', 2, 2], {}),
             "#t"
+        );
+    });
+});
+suite('if', function() {
+    test('if 1 = 2, 0, else 1', function() {
+        assert.deepEqual(
+            evalScheem(['if', ['=', 1, 2], 0, 1]),
+            1
+        );
+    });
+    test('if 2 = 2, 0, else 1', function() {
+        assert.deepEqual(
+            evalScheem(['if', ['=', 2, 2], 0, 1]),
+            0
+        );
+    });
+    test('only true branch is evaluated', function() {
+        assert.deepEqual(
+            evalScheem(['if', ['=', 2, 2], 1, 'error']),
+            1
         );
     });
 });
