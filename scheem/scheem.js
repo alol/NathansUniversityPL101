@@ -51,8 +51,8 @@ var evalScheem = function (expr, env) {
             if (eq) return '#t';
             return '#f';
          case 'cons':
-            var e2 = evalScheem(expr[2]);
-            e2.unshift(evalScheem(expr[1]));
+            var e2 = evalScheem(expr[2], env);
+            e2.unshift(evalScheem(expr[1], env));
             return e2;
         case 'car':
             return evalScheem(expr[1]).shift();
@@ -65,7 +65,7 @@ var evalScheem = function (expr, env) {
             if (eq) return '#t';
             return '#f';
         case 'if':
-            if(evalScheem(expr[1]) === '#t')
+            if(evalScheem(expr[1], env) === '#t')
                 return evalScheem(expr[2], env);
             return evalScheem(expr[3], env);
         default:
