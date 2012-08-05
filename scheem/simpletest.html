@@ -32,34 +32,22 @@ var evalScheem = function (expr, env) {
         case '+':
             var expr1 = evalScheem(expr[1], env);
             var expr2 = evalScheem(expr[2], env);
-            if (typeof expr1 !== "number")
-                throw new Error("Parameter 1 is not a number")
-            else if (typeof expr2 !== "number")
-                throw new Error("Parameter 2 is not a number")
+            checkNumber(expr1, 1), checkNumber(expr2, 2);
             return expr1 + expr2;
         case '-':
             var expr1 = evalScheem(expr[1], env);
             var expr2 = evalScheem(expr[2], env);
-            if (typeof expr1 !== "number")
-                throw new Error("Parameter 1 is not a number")
-            else if (typeof expr2 !== "number")
-                throw new Error("Parameter 2 is not a number")
+            checkNumber(expr1, 1), checkNumber(expr2, 2);
             return expr1 - expr2;
         case '*':
             var expr1 = evalScheem(expr[1], env);
             var expr2 = evalScheem(expr[2], env);
-            if (typeof expr1 !== "number")
-                throw new Error("Parameter 1 is not a number")
-            else if (typeof expr2 !== "number")
-                throw new Error("Parameter 2 is not a number")
+            checkNumber(expr1, 1), checkNumber(expr2, 2);
             return expr1 * expr2;
         case '/':
             var expr1 = evalScheem(expr[1], env);
             var expr2 = evalScheem(expr[2], env);
-            if (typeof expr1 !== "number")
-                throw new Error("Parameter 1 is not a number")
-            else if (typeof expr2 !== "number")
-                throw new Error("Parameter 2 is not a number")
+            checkNumber(expr1, 1), checkNumber(expr2, 2);
             return expr1 / expr2;
         case 'quote':
             return expr[1];
@@ -104,6 +92,13 @@ var evalScheem = function (expr, env) {
             throw new Error("undefined operation!");
 
     }
+};
+
+// check that a given parameter at index is a number
+// or throw an error
+var checkNumber = function(p, index) {
+    if (typeof p !== "number")
+        throw new Error("Parameter " + index + " is not a number");
 };
 
 // Some unit tests
