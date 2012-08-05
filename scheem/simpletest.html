@@ -58,7 +58,11 @@ var evalScheem = function (expr, env) {
                  evalScheem(expr[2], env));
             if (eq) return '#t';
             return '#f';
-        }
+         case 'cons':
+            var e2 = evalScheem(expr[2]);
+            e2.unshift(evalScheem(expr[1]));
+            return e2;
+    }
 };
 
 // Some unit tests
@@ -239,6 +243,16 @@ suite('less than', function() {
             evalScheem(['<', 3, 2], {}),
             "#f"
         );
+    });
+});
+suite('cons', function() {
+    test('add an atom to a list', function() {
+        evalScheem(['cons', 1, ['quote', [2, 3]]]),
+        [1, 2, 3]
+    });
+    test('add a list to a list', function() {
+        evalScheem(['cons', ['quote', [1, 2]], ['quote', [2, 3]]]),
+        [1, 2, 2, 3]
     });
 });
 
