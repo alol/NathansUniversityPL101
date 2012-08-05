@@ -101,6 +101,11 @@ var checkNumber = function(p, index) {
         throw new Error("Parameter " + index + " is not a number");
 };
 
+// parse and evaluate a scheem string
+var evalScheemString = function(scheemString) {
+    return evalScheem(SCHEEM.parse(scheemString));
+}
+
 // Some unit tests
 
 suite('quote', function() {
@@ -406,6 +411,38 @@ suite('parse', function() {
         assert.deepEqual(
             SCHEEM.parse("'(1 2 3)"),
             ['quote', [1, 2, 3]]
+        );
+    });
+});
+suite('parseScheemString', function() {
+    test('a number', function() {
+        assert.deepEqual(
+            evalScheemString('42'),
+            42
+        );
+    });
+    test('an expression', function() {
+        assert.deepEqual(
+            evalScheemString('(+ 1 1)'),
+            2
+        );
+    });
+    test('a nested expression', function() {
+        assert.deepEqual(
+            evalScheemString('(* 50 (+ 1 1))'),
+            100
+        );
+    });
+    test('a quote', function() {
+        assert.deepEqual(
+            evalScheemString('(quote (1 2 3))'),
+            [1, 2, 3]
+        );
+    });
+    test('a shorthand quote', function() {
+        assert.deepEqual(
+            evalScheemString("'(1 2 3)"),
+            [1, 2, 3]
         );
     });
 });
