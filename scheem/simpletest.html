@@ -62,6 +62,8 @@ var evalScheem = function (expr, env) {
             var e2 = evalScheem(expr[2]);
             e2.unshift(evalScheem(expr[1]));
             return e2;
+        case 'car':
+            return evalScheem(expr[1]).shift();
     }
 };
 
@@ -256,6 +258,20 @@ suite('cons', function() {
         assert.deepEqual(
             evalScheem(['cons', ['quote', [1, 2]], ['quote', [2, 3]]]),
             [[1, 2], 2, 3]
+        );
+    });
+});
+suite('car', function() {
+    test('head of a list (atom)', function() {
+        assert.deepEqual(
+            evalScheem(['car', ['quote',[1, 2, 3]]]),
+            1
+        );
+    });
+    test('head of a list (list)', function() {
+        assert.deepEqual(
+            evalScheem(['car', ['quote',[[1, 'a'], 2, 3]]]),
+            [1, 'a']
         );
     });
 });
