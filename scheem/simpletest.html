@@ -66,6 +66,12 @@ var evalScheem = function (expr, env) {
             return evalScheem(expr[1]).shift();
         case 'cdr':
             return evalScheem(expr[1]).slice(1);
+        case '=':
+            var eq =
+                (evalScheem(expr[1], env) ===
+                 evalScheem(expr[2], env));
+            if (eq) return '#t';
+            return '#f';
     }
 };
 
@@ -288,6 +294,20 @@ suite('cdr', function() {
         assert.deepEqual(
             evalScheem(['cdr', ['quote',[[1, 'a'], ['b', 2, 3]]]]),
             [['b', 2, 3]]
+        );
+    });
+});
+suite('equals', function() {
+    test('1 = 2 should return "#f"', function() {
+        assert.deepEqual(
+            evalScheem(['=', 1, 2], {}),
+            "#f"
+        );
+    });
+    test('2 = 2 should return "#t"', function() {
+        assert.deepEqual(
+            evalScheem(['=', 2, 2], {}),
+            "#t"
         );
     });
 });
