@@ -66,8 +66,8 @@ var evalScheem = function (expr, env) {
             return '#f';
         case 'if':
             if(evalScheem(expr[1]) === '#t')
-                return evalScheem(expr[2]);
-            return evalScheem(expr[3]);
+                return evalScheem(expr[2], env);
+            return evalScheem(expr[3], env);
         default:
             throw new Error("undefined operation!");
 
@@ -83,5 +83,5 @@ var checkNumber = function(p, index) {
 
 // parse and evaluate a scheem string
 var evalScheemString = function(scheemString) {
-    return evalScheem(SCHEEM.parse(scheemString));
+    return evalScheem(SCHEEM.parse(scheemString), {});
 }
