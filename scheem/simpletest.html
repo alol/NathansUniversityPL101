@@ -209,26 +209,36 @@ suite('variables', function() {
 });
 suite('begin', function() {
     test('return the last expression', function() {
-        evalScheem(['begin', 1, 2, 3], {}),
-        3
+        assert.deepEqual(
+            evalScheem(['begin', 1, 2, 3], {}),
+            3
+        );
     });
     test('define and then retrieve a variable', function() {
-        evalScheem(['begin', ['define', 'x', 5], 'x'], {}),
-        5
+        assert.deepEqual(
+            evalScheem(['begin', ['define', 'x', 5], 'x'], {}),
+            5
+        );
     });
 });
 suite('less than', function() {
     test('1 < 2 should return "#t"', function() {
-        evalScheem(['<', 1, 2], {}),
-        "#t"
+        assert.deepEqual(
+            evalScheem(['<', 1, 2], {}),
+            "#t"
+        );
     });
     test('2 < 2 should return "#f"', function() {
-        evalScheem(['<', 2, 2], {}),
-        "#f"
+        assert.deepEqual(
+            evalScheem(['<', 2, 2], {}),
+            "#f"
+        );
     });
     test('3 < 2 should return "#f"', function() {
-        evalScheem(['<', 3, 2], {}),
-        "#f"
+        assert.deepEqual(
+            evalScheem(['<', 3, 2], {}),
+            "#f"
+        );
     });
 });
 
