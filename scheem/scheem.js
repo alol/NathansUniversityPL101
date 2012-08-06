@@ -1,3 +1,16 @@
+if (typeof module !== 'undefined') {
+    // In Node.js load required modules
+    var PEG = require('pegjs');
+    var fs = require('fs');
+    var parse = PEG.buildParser(fs.readFileSync(
+        'scheem.peg', 'utf-8')).parse;
+} else {
+    // In browser assume loaded by <script>
+    var parse = SCHEEM.parse;
+
+    mocha.setup('tdd');
+}
+
 var evalScheem = function (expr, env) {
     // Numbers evaluate to themselves
     if (typeof expr === 'number') {
@@ -83,5 +96,10 @@ var checkNumber = function(p, index) {
 
 // parse and evaluate a scheem string
 var evalScheemString = function(scheemString) {
-    return evalScheem(SCHEEM.parse(scheemString), {});
+    return evalScheem(parse(scheemString), {});
+}
+
+if (typeof module !== 'undefined') {
+    module.exports.evalScheem = evalScheem;
+    module.exports.evalScheemString = evalScheemString;
 }
