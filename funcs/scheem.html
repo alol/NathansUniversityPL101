@@ -1,0 +1,39 @@
+<!DOCTYPE HTML>
+<html lang="en">
+<head>
+	<meta charset="UTF-8">
+    <link rel="stylesheet" href="http://nathansuniversity.com/css/mocha.css" />
+    <script type="text/javascript" src="scheem.js"></script>
+    <script type="text/javascript" src="parser.js"></script>
+
+    <script type="text/javascript" src="http://ajax.googleapis.com/ajax/libs/jquery/1.7.2/jquery.min.js"></script>
+
+    <script src="codemirror/lib/codemirror.js"></script>
+    <link rel="stylesheet" href="codemirror/lib/codemirror.css">
+    <script src="codemirror/mode/scheme/scheme.js"></script>
+    <script type="text/javascript">
+        $(function(){
+            var myCodeMirror = CodeMirror.fromTextArea(document.getElementById('scheem_textarea'));
+
+            $("#scheem").submit(function(e){
+                e.preventDefault();
+
+                $("#result").text(
+                    evalScheemString($("#scheem_textarea").val())
+                );
+            });
+        });
+    </script>
+	<title>Scheem interpreter</title>
+</head>
+<body>
+    <div id="mocha">
+        <hi>Scheem</hi>
+        <form action="#" id="scheem">
+            <textarea id="scheem_textarea" name="" rows="10" cols="30"></textarea>
+            <input type="submit" value="RUN" />
+        </form>
+        <div id="result"></div>
+    </div>
+</body>
+</html>

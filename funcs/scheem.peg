@@ -1,0 +1,37 @@
+start =
+    pass values:value?
+       { return values; }
+ 
+expression =
+    "(" pass values:value+ ")" pass
+        { return values; }
+
+validchar
+    = [0-9a-zA-Z_?!+\-=@#$%^&*/.]
+
+quote =
+    "'" values:value
+        {return ["quote", values]}
+
+atom =
+    chars:validchar+ pass
+        {
+            if(parseInt(chars.join("")) == chars.join(""))
+                return parseInt(chars.join(""));
+            return chars.join("");
+        }
+
+whitespace =
+    [ \t]
+
+newline =
+    [\r\n]
+
+pass =
+   (whitespace / newline / comment)*
+
+comment = 
+    ";;" (!newline .)*
+
+value =
+    atom / expression / quote
