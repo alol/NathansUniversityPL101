@@ -362,3 +362,44 @@ suite('parseScheemString', function() {
         );
     });
 });
+suite('let-one', function() {
+    test('scoped only to its parameters', function() {
+        assert.throws(
+            function() {
+                evalScheemString("(begin (let-one x 1 (+ x 1)) x)")
+            }
+        );
+    });
+    test('scope available within third parameter', function(){
+        assert.deepEqual(
+            evalScheemString("(begin (let-one x 1 (+ x 1)))"),
+            2
+        )
+    });
+    test('scope deeply available within third parameter', function(){
+        assert.deepEqual(
+            evalScheemString("(begin (let-one x 1 (let-one y 2 (+ x y))))"),
+            3
+        )
+    });
+});
+suite('lambda-one', function() {
+    test('identity function', function(){
+        assert.deepEqual(
+            evalScheemString("((lambda-one x x) 5)"),
+            5
+        );
+    });
+    test('plus one function', function(){
+        assert.deepEqual(
+            evalScheemString("((lambda-one x (+ x 1)) 5)"),
+            6
+        );
+    });
+    test('nested lambdas with their own variable names', function(){
+        assert.deepEqual(
+            evalScheemString("(((lambda-one x (lambda-one y (+ x y))) 5) 3)"),
+            8
+        );
+    });
+});

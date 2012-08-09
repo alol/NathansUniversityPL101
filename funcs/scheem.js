@@ -79,6 +79,19 @@ var evalScheem = function (expr, env) {
             if(evalScheem(expr[1], env) === '#t')
                 return evalScheem(expr[2], env);
             return evalScheem(expr[3], env);
+         case 'let-one':
+            var newEnv = newEnvLayer(env, expr[1], evalScheem(expr[2], env));
+            return evalScheem(expr[3], newEnv);
+         case 'lambda-one':
+            return function(arg) {
+                var newEnv = newEnvLayer(env, expr[1], arg);
+                return evalScheem(expr[2], newEnv);
+            };
+         default:
+            var fn    = evalScheem(expr[0], env);
+            var param = evalScheem(expr[1], env);
+
+            return fn(param);
     }
 };
 
