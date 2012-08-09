@@ -172,7 +172,7 @@ suite('variables', function() {
         evalScheem(['set!', 'x', 100], env);
         assert.deepEqual(
             env,
-            {x:1}
+            {x:100}
         );
     });
 });
