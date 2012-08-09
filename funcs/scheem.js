@@ -88,10 +88,13 @@ var evalScheem = function (expr, env) {
                 return evalScheem(expr[2], newEnv);
             };
          default:
-            var fn    = evalScheem(expr[0], env);
-            var param = evalScheem(expr[1], env);
+            var fn     = evalScheem(expr[0], env);
+            var params = [];
+            for(var i  = 1; i < expr.length; i++) {
+                params.push(evalScheem(expr[i], env));
+            }
 
-            return fn(param);
+            return fn.apply(null, params);
     }
 };
 
@@ -147,8 +150,9 @@ var checkNumber = function(p, index) {
 };
 
 // parse and evaluate a scheem string
-var evalScheemString = function(scheemString) {
-    return evalScheem(parse(scheemString), {});
+var evalScheemString = function(scheemString, env) {
+    var env = env || {};
+    return evalScheem(parse(scheemString), env);
 }
 
 if (typeof module !== 'undefined') {

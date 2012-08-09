@@ -383,6 +383,40 @@ suite('let-one', function() {
         )
     });
 });
+suite('functions', function() {
+    var identity = function(x) { return x; }
+    var always3  = function() { return 3; }
+    var addtwo  = function(x, y) { return x+y; }
+    var env      = {
+                    "identity": identity,
+                    "always3": always3,
+                    "addtwo": addtwo
+                   };
+    test('identity function', function(){
+        assert.deepEqual(
+            evalScheemString("(identity 10)", env),
+            10
+        );
+    });
+    test('always3 function, (takes no parameters)', function(){
+        assert.deepEqual(
+            evalScheemString("(always3)", env),
+            3
+        );
+    });
+    test('nested functions', function(){
+        assert.deepEqual(
+            evalScheemString("(identity (always3))", env),
+            3
+        )
+    });
+    test('addtwo (two parameters)', function(){
+        assert.deepEqual(
+            evalScheemString("(addtwo 1 2)", env),
+            3
+        )
+    });
+});
 suite('lambda-one', function() {
     test('identity function', function(){
         assert.deepEqual(
