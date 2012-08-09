@@ -7,7 +7,6 @@ if (typeof module !== 'undefined') {
 } else {
     // In browser assume loaded by <script>
     var parse = SCHEEM.parse;
-
     mocha.setup('tdd');
 }
 
@@ -18,7 +17,7 @@ var evalScheem = function (expr, env) {
     }
     // Strings are variable references
     if (typeof expr === 'string') {
-        return env[expr];
+        return lookup(env, expr);
     }
     // Look at head of list for operation
     switch (expr[0]) {
@@ -45,15 +44,14 @@ var evalScheem = function (expr, env) {
         case 'quote':
             return expr[1];
         case 'define':
-            if(!env[expr[1]])
-                    env[expr[1]] = evalScheem(expr[2], env);
+            add_binding(env, expr[1], evalScheem(expr[2], env));
             return 0;
         case 'set!':
-            env[expr[1]] = evalScheem(expr[2], env);
+            update(env, expr[1], evalScheem(expr[2], env));
             return 0;   
         case 'begin':
             var retVal;
-            for(var i = 0; i < expr.length; i++) {
+            for(var i = 1; i < expr.length; i++) {
                 retVal = evalScheem(expr[i], env);
             }
             return retVal;
@@ -81,10 +79,51 @@ var evalScheem = function (expr, env) {
             if(evalScheem(expr[1], env) === '#t')
                 return evalScheem(expr[2], env);
             return evalScheem(expr[3], env);
-        default:
-            throw new Error("undefined operation!");
-
     }
+};
+
+// create a new env layer above the current env, with a single binding
+var newEnvLayer = function (env, v, val) {
+    var newEnv = { bindings: { }, outer: { } };
+    newEnv.bindings[v] = val;
+    newEnv.outer = env;
+    return newEnv;
+}
+
+// lookup a variable top down through the scope tree
+var lookup = function (env, v) {
+    if(typeof env.bindings !== "undefined" && env.bindings[v])
+        return env.bindings[v];
+    if(env.outer)
+        return lookup(env.outer, v);
+    if(env[v])
+        return env[v];
+    throw Error(v + "not defined");
+};
+
+// update the first definition of a variable top down within the scope tree
+var update = function (env, v, val) {
+    if (typeof env.bindings !== "undefined" && env.bindings[v]) {
+        env.bindings[v] = val;
+        return;
+    } else if (env.outer) {
+        update(env.outer, v, val);
+        return;
+    } else if (env[v]) {
+        env[v] = val;
+        return;
+    } else {
+        return;
+    }
+    env.bindings[v] = val;
+};
+
+// add a top-most binding to env in-place
+var add_binding = function (env, v, val) {
+    if(!env.bindings) {
+        env.bindings = {};
+    }
+    env.bindings[v] = val;
 };
 
 // check that a given parameter at index is a number

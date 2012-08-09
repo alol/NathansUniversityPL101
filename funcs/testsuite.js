@@ -156,7 +156,7 @@ suite('variables', function() {
         evalScheem(['define', 'x', 1], env);
         assert.deepEqual(
             env,
-            {x:1}
+            {bindings: {x:1}}
         );
     });
     test('define x to the result of an expression', function() {
@@ -164,7 +164,7 @@ suite('variables', function() {
         evalScheem(['define', 'x', ['*', 20, 5]], env);
         assert.deepEqual(
             env,
-            {x:100}
+            {bindings: {x:100}}
         );
     });
     test('overwrite x to another number', function() {
@@ -172,7 +172,7 @@ suite('variables', function() {
         evalScheem(['set!', 'x', 100], env);
         assert.deepEqual(
             env,
-            {x:100}
+            {x:1}
         );
     });
 });
