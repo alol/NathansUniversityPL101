@@ -11,6 +11,11 @@ if (typeof module !== 'undefined') {
 }
 
 var evalScheem = function (expr, env) {
+    // default parameter for env
+    env = env || {};
+    if(!checkForBindings(env)) {
+        env = addFunctionBindings(env);
+    }
     // Numbers evaluate to themselves
     if (typeof expr === 'number') {
         return expr;
@@ -21,26 +26,6 @@ var evalScheem = function (expr, env) {
     }
     // Look at head of list for operation
     switch (expr[0]) {
-        case '+':
-            var expr1 = evalScheem(expr[1], env);
-            var expr2 = evalScheem(expr[2], env);
-            checkNumber(expr1, 1), checkNumber(expr2, 2);
-            return expr1 + expr2;
-        case '-':
-            var expr1 = evalScheem(expr[1], env);
-            var expr2 = evalScheem(expr[2], env);
-            checkNumber(expr1, 1), checkNumber(expr2, 2);
-            return expr1 - expr2;
-        case '*':
-            var expr1 = evalScheem(expr[1], env);
-            var expr2 = evalScheem(expr[2], env);
-            checkNumber(expr1, 1), checkNumber(expr2, 2);
-            return expr1 * expr2;
-        case '/':
-            var expr1 = evalScheem(expr[1], env);
-            var expr2 = evalScheem(expr[2], env);
-            checkNumber(expr1, 1), checkNumber(expr2, 2);
-            return expr1 / expr2;
         case 'quote':
             return expr[1];
         case 'define':
@@ -55,26 +40,6 @@ var evalScheem = function (expr, env) {
                 retVal = evalScheem(expr[i], env);
             }
             return retVal;
-        case '<':
-            var eq =
-                (evalScheem(expr[1], env) <
-                 evalScheem(expr[2], env));
-            if (eq) return '#t';
-            return '#f';
-         case 'cons':
-            var e2 = evalScheem(expr[2], env);
-            e2.unshift(evalScheem(expr[1], env));
-            return e2;
-        case 'car':
-            return evalScheem(expr[1]).shift();
-        case 'cdr':
-            return evalScheem(expr[1]).slice(1);
-        case '=':
-            var eq =
-                (evalScheem(expr[1], env) ===
-                 evalScheem(expr[2], env));
-            if (eq) return '#t';
-            return '#f';
         case 'if':
             if(evalScheem(expr[1], env) === '#t')
                 return evalScheem(expr[2], env);
@@ -108,6 +73,40 @@ var evalScheem = function (expr, env) {
             return fn.apply(null, params);
     }
 };
+
+// check if the env has bindings at depth
+var checkForBindings = function(env) {
+    if(env.bindings)
+        return true;
+    if(env.outer)
+        return checkForBindings(env);
+    return false;
+}
+
+// add function bindings for builtins
+var addFunctionBindings = function(env) {
+    var bindings = {};
+    for (var o in env) {
+        if (env.hasOwnProperty(o))
+            bindings[o] = env[o];
+    }
+    bindings['+'] = function(x, y) { return x + y; };
+    bindings['-'] = function(x, y) { return x - y; };
+    bindings['*'] = function(x, y) { return x * y; };
+    bindings['/'] = function(x, y) { return x / y; };
+    bindings['='] = function(x, y) { return x === y ? "#t" : "#f"; };
+    bindings['<'] = function(x, y) { return x < y   ? "#t" : "#f"; };
+    bindings['>'] = function(x, y) { return x > y   ? "#t" : "#f"; };
+    bindings['cons'] = function(x, y) {
+        y.unshift(x);
+        return y;
+    };
+    bindings['car'] = function(x) { return x.shift(); }
+    bindings['cdr'] = function(x) { return x.slice(1); }
+
+    env.bindings = bindings;
+    return env;
+}
 
 // create a new env layer above the current env, with a single binding
 var newEnvLayer = function (env, v, val) {

@@ -155,24 +155,24 @@ suite('variables', function() {
         var env = {};
         evalScheem(['define', 'x', 1], env);
         assert.deepEqual(
-            env,
-            {bindings: {x:1}}
+            env.bindings.x,
+            1
         );
     });
     test('define x to the result of an expression', function() {
         var env = {};
         evalScheem(['define', 'x', ['*', 20, 5]], env);
         assert.deepEqual(
-            env,
-            {bindings: {x:100}}
+            env.bindings.x,
+            100
         );
     });
     test('overwrite x to another number', function() {
         var env = {x:1};
         evalScheem(['set!', 'x', 100], env);
         assert.deepEqual(
-            env,
-            {x:100}
+            env.bindings.x,
+            100
         );
     });
 });
@@ -207,6 +207,26 @@ suite('less than', function() {
         assert.deepEqual(
             evalScheem(['<', 3, 2], {}),
             "#f"
+        );
+    });
+});
+suite('greater than', function() {
+    test('1 > 2 should return "#f"', function() {
+        assert.deepEqual(
+            evalScheem(['>', 1, 2], {}),
+            "#f"
+        );
+    });
+    test('2 > 2 should return "#f"', function() {
+        assert.deepEqual(
+            evalScheem(['>', 2, 2], {}),
+            "#f"
+        );
+    });
+    test('3 > 2 should return "#t"', function() {
+        assert.deepEqual(
+            evalScheem(['>', 3, 2], {}),
+            "#t"
         );
     });
 });
