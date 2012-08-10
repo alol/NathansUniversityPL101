@@ -47,6 +47,14 @@ var evalScheem = function (expr, env) {
          case 'let-one':
             var newEnv = newEnvLayer(env, expr[1], evalScheem(expr[2], env));
             return evalScheem(expr[3], newEnv);
+         case 'let':
+            var letEnv = { bindings: {} };
+            letEnv.outer = env;
+            for(var i = 0; i < expr[1].length; i++) {
+                var varName = expr[1][i][0];
+                letEnv.bindings[varName] = evalScheem(expr[1][i][1], env);
+            }
+            return evalScheem(expr[2], letEnv);
          case 'lambda-one':
             return function(arg) {
                 var newEnv = newEnvLayer(env, expr[1], arg);

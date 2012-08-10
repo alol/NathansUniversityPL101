@@ -403,6 +403,33 @@ suite('let-one', function() {
         )
     });
 });
+suite('let', function() {
+    test('scoped only to its parameters', function() {
+        assert.throws(
+            function() {
+                evalScheemString("(begin (let ((x 1)) (+ x 1)) x)")
+            }
+        );
+    });
+    test('scope available within third parameter', function(){
+        assert.deepEqual(
+            evalScheemString("(begin (let ((x 1)) (+ x 1)))"),
+            2
+        )
+    });
+    test('scope deeply available within third parameter', function(){
+        assert.deepEqual(
+            evalScheemString("(begin (let ((x 1)) (let ((y 2)) (+ x y))))"),
+            3
+        )
+    });
+    test('multiple parameters', function(){
+        assert.deepEqual(
+            evalScheemString("(let ((x 1) (y 100)) (+ x y))"),
+            101
+        )
+    });
+});
 suite('functions', function() {
     var identity = function(x) { return x; }
     var always3  = function() { return 3; }
