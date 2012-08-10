@@ -205,13 +205,13 @@ SCHEEM = (function(){
       function parse_validchar() {
         var result0;
         
-        if (/^[0-9a-zA-Z_?!+\-=@#$%^&*\/.]/.test(input.charAt(pos))) {
+        if (/^[0-9a-zA-Z_?!+\-=@#$%^&*\/.<>]/.test(input.charAt(pos))) {
           result0 = input.charAt(pos);
           pos++;
         } else {
           result0 = null;
           if (reportFailures === 0) {
-            matchFailed("[0-9a-zA-Z_?!+\\-=@#$%^&*\\/.]");
+            matchFailed("[0-9a-zA-Z_?!+\\-=@#$%^&*\\/.<>]");
           }
         }
         return result0;
@@ -284,8 +284,8 @@ SCHEEM = (function(){
         if (result0 !== null) {
           result0 = (function(offset, chars) {
                     if(parseInt(chars.join("")) == chars.join(""))
-                        return parseInt(chars.join(""))
-                    return chars.join(""); 
+                        return parseInt(chars.join(""));
+                    return chars.join("");
                 })(pos0, result0[0]);
         }
         if (result0 === null) {

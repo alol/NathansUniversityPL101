@@ -437,3 +437,77 @@ suite('lambda-one', function() {
         );
     });
 });
+suite('lambda', function() {
+    test('identity function', function(){
+        assert.deepEqual(
+            evalScheemString("((lambda (x) x) 5)"),
+            5
+        );
+    });
+    test('plus one function', function(){
+        assert.deepEqual(
+            evalScheemString("((lambda (x) (+ x 1)) 5)"),
+            6
+        );
+    });
+    test('nested lambdas with their own variable names', function(){
+        assert.deepEqual(
+            evalScheemString("(((lambda (x) (lambda y (+ x y))) 5) 3)"),
+            8
+        );
+    });
+    test('lambda with two parameters', function(){
+        assert.deepEqual(
+            evalScheemString("((lambda (x y) (+ x y)) 5 3) "),
+            8
+        );
+    });
+    test('define lambda and call it', function(){
+        assert.deepEqual(
+            evalScheemString("(begin (define l (lambda (x) x)) (l 1))"),
+            1
+        );
+    });
+    test('pass a function as a value to another function', function(){
+        assert.deepEqual(
+            evalScheemString("(begin (define l (lambda (x) x)) ((lambda (my-lambda) (my-lambda 5)) l))"),
+            5
+        );
+    });
+    test('inner function uses variables from outer function', function(){
+        assert.deepEqual(
+            evalScheemString("((lambda (x) ((lambda (y) (+ x y)) 4)) 2)"),
+            6
+        );
+    });
+    test('function changes a global variable', function(){
+        assert.deepEqual(
+            evalScheemString("(begin (define x 1) ((lambda (new) (set! x new)) 10) x)"),
+            10
+        );
+    });
+    test('inner function modifies a variable in outer function', function(){
+        assert.deepEqual(
+            evalScheemString("((lambda (x) (begin ((lambda (y) (begin (set! x 10) (+ x y))) 4) x)) 2)"),
+            10
+        );
+    });
+    test('outer function returns inner function', function(){
+        assert.deepEqual(
+            evalScheemString("(begin (define f ((lambda (x) (lambda (y) y) 2))) (f 1))"),
+            1
+        );
+    });
+    test('outer function returns inner function', function(){
+        assert.deepEqual(
+            evalScheemString("(begin (define f ((lambda (x) (lambda (y) x)) 2)) ((f 1)))"),
+            2
+        );
+    });
+    test('define a function which calls itself recursively', function(){
+        assert.deepEqual(
+            evalScheemString("(begin (define func (lambda (x) (if (< 10 x) x (func (+ 5 x))))) (func 1))"),
+            11
+        );
+    });
+});

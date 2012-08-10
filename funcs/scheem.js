@@ -87,6 +87,14 @@ var evalScheem = function (expr, env) {
                 var newEnv = newEnvLayer(env, expr[1], arg);
                 return evalScheem(expr[2], newEnv);
             };
+         case 'lambda':
+            return function() {
+                var newEnv = env;
+                for(var i = 0; i < (expr[1].length); i++) {
+                    newEnv = newEnvLayer(newEnv, expr[1][i], arguments[i]);
+                }
+                return evalScheem(expr[2], newEnv);
+            };
          default:
             var fn     = evalScheem(expr[0], env);
             var params = [];
@@ -94,6 +102,9 @@ var evalScheem = function (expr, env) {
                 params.push(evalScheem(expr[i], env));
             }
 
+            if (typeof fn !== "function") {
+                return fn;
+            }
             return fn.apply(null, params);
     }
 };
